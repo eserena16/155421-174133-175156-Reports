@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  app:
+    build: ./reports
+    ports:
+      - 8070:8070
+    depends_on:
+      - rabbitmq
+      - mongodb
+    environment:
+      - RABBIT_HOST=amqp://rabbitmq
+      - RABBIT_QUEUE=API
+      - RDS_MONGOURI=mongodb://mongodb:27017/databaseAPI      
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+  mongodb:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  rabbitmq_data:
+  mongodb_data:
